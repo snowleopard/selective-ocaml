@@ -1,0 +1,5 @@
+(library
+ (name selective_tests)
+ (libraries selective)
+ (inline_tests)
+ (preprocess (pps ppx_expect)))

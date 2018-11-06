@@ -9,6 +9,7 @@ license: "MIT"
 depends: [
   "ocaml" {>= "4.02"}
   "dune" {build}
+  "ppx_expect" {with-test}
 ]
 build: [
   ["dune" "build" "-p" name "-j" jobs]
