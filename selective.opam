@@ -1,0 +1,22 @@
+opam-version: "2.0"
+maintainer: "jeremie@dimino.org"
+authors: ["Andrey Mokhow <andrey.mokhov@newcastle.ac.uk>"
+          "Jeremie Dimino <jeremie@dimino.org>"]
+homepage: "https://github.com/snowleopard/selective-ocaml"
+bug-reports: "https://github.com/snowleopard/selective-ocaml/issues"
+dev-repo: "git+https://github.com/snowleopard/selective-ocaml.git"
+license: "MIT"
+depends: [
+  "ocaml" {>= "4.02"}
+  "dune" {build}
+]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+  ["dune" "runtest" "-p" name "-j" jobs] {with-test}
+]
+synopsis: "Selective applicative functors in OCaml"
+description: """
+This is a study of selective applicative functors, an abstraction
+between Applicative and Monad. The idea was first prototyped in
+Haskell, and now we are exploring its translation to OCaml.
+"""
