@@ -1,2 +1,3 @@
 (library
- (public_name selective))
+ (public_name selective)
+ (libraries base))
