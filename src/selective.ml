@@ -1,12 +1,7 @@
 open Base
+include Selective_intf
 
-module type Selective = sig
-  include Applicative.Basic
-
-  val select : ('a, 'b) Either.t t -> ('a -> 'b) t -> 'b t
-end
-
-module Make_selective_helpers (S : Selective) = struct
+module Make (S : Basic) = struct
   include S
   include Applicative.Make (S)
 
