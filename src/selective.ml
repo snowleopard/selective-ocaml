@@ -35,4 +35,13 @@ module Make_selective_helpers(S : Selective) = struct
     branch (map x ~f:(fun b -> if b then Either.First () else Either.Second ()))
            (map t ~f:Fn.const)
            (map f ~f:Fn.const)
+
+  (* Conditionally perform an effect. *)
+  let whenS (x : bool S.t) (act : unit S.t) : unit S.t = ifS x act (return ())
+
+  (* A lifted version of lazy Boolean OR. *)
+  let (<||>) (a : bool S.t) (b : bool S.t) : bool S.t = ifS a (return true) b
+
+  (* A lifted version of lazy Boolean AND. *)
+  let (<&&>) (a : bool S.t) (b : bool S.t) : bool S.t = ifS a b (return false)
 end
