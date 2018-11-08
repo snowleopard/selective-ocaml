@@ -1,0 +1,5 @@
+(library
+ (name selective_example)
+ (libraries base selective expect_test_helpers_kernel)
+ (inline_tests)
+ (preprocess (pps ppx_jane)))
