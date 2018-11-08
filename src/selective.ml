@@ -12,11 +12,11 @@ module Make_selective_helpers(S : Selective) = struct
   let (<*?) x f = S.select x f
 
   let branch (x : (('a, 'b) Either.t) S.t) (l : ('a -> 'c) S.t) (r : ('b -> 'c) S.t) : 'c S.t =
-    map x ~f:(fun e -> Either.map e ~first:Fn.id ~second:Either.first) <*?
-    map l ~f:(Fn.compose Either.second)                                <*? r
+    map x ~f:(Either.map ~first:Fn.id ~second:Either.first) <*?
+    map l ~f:(Fn.compose Either.second) <*? r
 
-  let ifS (c : bool S.t) (t : 'a S.t) (e : 'a S.t) : 'a S.t =
-    branch (map c ~f:(fun b -> if b then Either.First () else Either.Second ()))
-           (map t ~f:(fun a -> Fn.const a))
-           (map e ~f:(fun a -> Fn.const a))
+  let ifS (x : bool S.t) (t : 'a S.t) (f : 'a S.t) : 'a S.t =
+    branch (map x ~f:(fun b -> if b then Either.First () else Either.Second ()))
+           (map t ~f:Fn.const)
+           (map f ~f:Fn.const)
 end
