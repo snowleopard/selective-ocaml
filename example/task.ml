@@ -3,26 +3,6 @@
 
 open Base
 
-let listSelect fs = function
-  | Either.First a -> List.map fs ~f:(fun f -> f a)
-  | Either.Second b -> [b]
-
-(* ListSelective.select [Either.First 1; Either.Second 2] [(fun x -> x * 10);
-   (fun x -> x * 20)] - : int ListSelective.t = [10; 20; 2] *)
-module ListSelective : Selective.S with type 'a t = 'a list =
-Selective.Make (struct
-  type 'a t = 'a list
-
-  let return x = [x]
-
-  let apply fs xs =
-    List.concat_map xs ~f:(fun x -> List.map fs ~f:(fun f -> f x))
-
-  let map = `Custom List.map
-
-  let select xs fs = List.concat_map xs ~f:(fun x -> listSelect fs x)
-end)
-
 module type Task = sig
   type k
 
@@ -33,7 +13,11 @@ module type Task = sig
   end
 end
 
-module Example : Task with type k := string and type v := int = struct
+module Example : Task with type k = string and type v = int = struct
+  type k = string
+
+  type v = int
+
   module Make (S : Selective.S) = struct
     let run fetch =
       S.ifS
@@ -50,7 +34,7 @@ module type Monoid = sig
   val append : t -> t -> t
 end
 
-module Const (M : Monoid) = Selective.Make (struct
+module Const (M : Monoid) = struct
   type 'a t = Const of M.t
 
   let return _ = Const M.empty
@@ -60,4 +44,31 @@ module Const (M : Monoid) = Selective.Make (struct
   let map = `Define_using_apply
 
   let select (Const x) (Const y) = Const (M.append x y)
-end)
+end
+
+module Dependencies (Task : Task) : sig
+  val deps : Task.k list
+end = struct
+  module Ks = Const (struct
+    type t = Task.k list
+
+    let empty = []
+
+    let append = List.append
+  end)
+
+  module M = Task.Make (Selective.Make (Ks))
+
+  let deps =
+    let (Ks.Const x) = M.run (fun k -> Ks.Const [k]) in
+    x
+end
+
+let%expect_test "task" =
+  let module D = Dependencies (Example) in
+  List.iter D.deps ~f:Stdio.print_endline;
+  [%expect {|
+    condition
+    zero
+    non-zero
+  |}]

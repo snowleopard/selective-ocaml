@@ -1,3 +1,5 @@
+default: test
+
 build:
 	dune build @all
 
@@ -6,3 +8,5 @@ test:
 
 clean:
 	dune clean
+
+.PHONY: default build test clean
