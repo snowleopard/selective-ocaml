@@ -20,4 +20,6 @@ description: """
 This is a study of selective applicative functors, an abstraction
 between Applicative and Monad. The idea was first prototyped in
 Haskell, and now we are exploring its translation to OCaml.
+
+See examples in the doc directory.
 """

@@ -3,3 +3,7 @@
  (libraries base stdio selective expect_test_helpers_kernel)
  (inline_tests)
  (preprocess (pps ppx_jane)))
+
+(install
+ (section doc)
+ (files task.ml sexp_parser.ml))
