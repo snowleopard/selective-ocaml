@@ -5,6 +5,7 @@ authors: ["Andrey Mokhov <andrey.mokhov@gmail.com>"
 homepage: "https://github.com/snowleopard/selective-ocaml"
 bug-reports: "https://github.com/snowleopard/selective-ocaml/issues"
 dev-repo: "git+https://github.com/snowleopard/selective-ocaml.git"
+doc: "https://snowleopard.github.io/selective-ocaml/"
 license: "MIT"
 depends: [
   "ocaml" {>= "4.02"}
