@@ -98,8 +98,11 @@ end = struct
         (f t, sexps)
     | Select (t, f) -> (
         let t, sexps = parse t sexps in
-        let f, sexps = parse f sexps in
-        match t with First x -> (f x, sexps) | Second y -> (y, sexps) )
+        match t with
+        | First x ->
+            let f, sexps = parse f sexps in
+            (f x, sexps)
+        | Second y -> (y, sexps) )
     | Keyword s -> (
       match sexps with
       | Atom x :: rest when String.equal x s -> ((), rest)
@@ -111,7 +114,7 @@ end = struct
           if not (List.is_empty sexps) then
             failwith "remaninig elements at end of list";
           (x, rest)
-      | _ -> failwith "list expected" )
+      | _ -> raise_s [%message "list expected" ~sexps:(sexps : Sexp.t list)] )
     | Is_list -> (
       match sexps with List _ :: _ -> (true, sexps) | _ -> (false, sexps) )
     | Atom -> (
@@ -164,22 +167,21 @@ module Test = struct
        in
        y)
 
-  (* let%expect_test _ = let v = parse expr [Atom "hello"; Atom "world!"] in
-     print_s [%sexp (v : hello_to)]; [%expect {| DID NOT REACH THIS PROGRAM
-     POINT |}]; let v = parse expr [Atom "hello"; List [Atom "bob"; Atom
-     "alice"]] in print_s [%sexp (v : hello_to)]; [%expect {| (* CR
-     expect_test_collector: This test expectation appears to contain a
-     backtrace. This is strongly discouraged as backtraces are fragile. Please
-     change this test to not include a backtrace. *)
+  let%expect_test _ =
+    let v = parse expr [List [Atom "hello"; Atom "world!"]] in
+    print_s [%sexp (v : hello_to)];
+    [%expect {| World |}]
 
-     ("A top-level expression in [let%expect] raised -- consider using
-     [show_raise]" (Failure "list expected") (backtrace ( "Raised at file
-     \"stdlib.ml\", line 33, characters 17-33" "Called from file
-     \"example/sexp_parser.ml\", line 131, characters 19-32" "Called from file
-     \"example/sexp_parser.ml\", line 168, characters 12-52" "Called from file
-     \"src/expect_test_helpers_kernel.ml\", line 475, characters 6-10"))) |}]
+  let%expect_test _ =
+    let v =
+      parse expr [List [Atom "hello"; List [Atom "bob"; Atom "alice"]]]
+    in
+    print_s [%sexp (v : hello_to)];
+    [%expect {| (These (bob alice)) |}]
 
-     let%expect_test _ = print_s [%sexp (grammar expr : Grammar.t)]; [%expect
-     {| ((List ((Keyword hello) (List ((Repeat (Atom)))) (Keyword world!))))
-     |}]*)
+  let%expect_test _ =
+    print_s [%sexp (grammar expr : Grammar.t)];
+    [%expect
+      {| ((List ((Keyword hello) (List ((Repeat (Atom)))) (Keyword world!))))
+     |}]
 end
