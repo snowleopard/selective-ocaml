@@ -1,6 +1,6 @@
 opam-version: "2.0"
 maintainer: "jeremie@dimino.org"
-authors: ["Andrey Mokhow <andrey.mokhov@newcastle.ac.uk>"
+authors: ["Andrey Mokhov <andrey.mokhov@gmail.com>"
           "Jeremie Dimino <jeremie@dimino.org>"]
 homepage: "https://github.com/snowleopard/selective-ocaml"
 bug-reports: "https://github.com/snowleopard/selective-ocaml/issues"
@@ -8,7 +8,7 @@ dev-repo: "git+https://github.com/snowleopard/selective-ocaml.git"
 license: "MIT"
 depends: [
   "ocaml" {>= "4.02"}
-  "dune" {build}
+  "dune" {build & >= "1.5"}
   "ppx_expect" {with-test}
 ]
 build: [
