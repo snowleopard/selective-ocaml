@@ -6,4 +6,4 @@ exploring its translation to OCaml.
 
 ## Further reading
 
-* A blog post introducing selective applicative functors: https://blogs.ncl.ac.uk/andreymokhov/selective.
+* A paper introducing selective functors: https://www.staff.ncl.ac.uk/andrey.mokhov/selective-functors.pdf.
