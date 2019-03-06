@@ -5,7 +5,7 @@ module type Basic = sig
 
   (** Selective applicative functors. You can think of [select] as a selective
       function application: you apply a function only when given a value
-      [First a]. Otherwise, you can skip the function and associted effects and
+      [First a]. Otherwise, you can skip the function and associated effects and
       return the [b] from [Second b].
 
       Note that it is not a requirement for selective functors to skip
